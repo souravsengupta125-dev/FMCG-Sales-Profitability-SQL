@@ -1,0 +1,237 @@
+-- ============================================================
+-- FMCG SQL ANALYTICS PROJECT
+-- FILE: 03_business_analysis.sql
+-- PURPOSE: Core business performance analysis
+-- ============================================================
+
+
+-- ============================================================
+-- 1. OVERALL BUSINESS PERFORMANCE
+-- Business Question:
+-- What is the overall revenue, margin and transaction volume?
+-- ============================================================
+
+SELECT
+    COUNT(*) AS total_transactions,
+    ROUND(SUM(revenue), 2) AS total_revenue,
+    ROUND(SUM(margin), 2) AS total_margin,
+    ROUND(
+        SUM(margin) * 100.0 / NULLIF(SUM(revenue), 0),
+        2
+    ) AS overall_margin_pct
+FROM public.staging_fmcg;
+
+
+-- ============================================================
+-- 2. CITY PERFORMANCE
+-- Business Question:
+-- Which cities generate the highest revenue and margin?
+-- ============================================================
+
+SELECT
+    city,
+    COUNT(*) AS transactions,
+    ROUND(SUM(revenue), 2) AS revenue,
+    ROUND(SUM(margin), 2) AS margin,
+    ROUND(
+        SUM(margin) * 100.0 / NULLIF(SUM(revenue), 0),
+        2
+    ) AS margin_pct
+FROM public.staging_fmcg
+GROUP BY city
+ORDER BY revenue DESC;
+
+
+-- ============================================================
+-- 3. CATEGORY PERFORMANCE
+-- Business Question:
+-- Which FMCG categories generate the highest revenue and margin?
+-- ============================================================
+
+SELECT
+    category,
+    COUNT(*) AS transactions,
+    ROUND(SUM(revenue), 2) AS revenue,
+    ROUND(SUM(margin), 2) AS margin,
+    ROUND(
+        SUM(margin) * 100.0 / NULLIF(SUM(revenue), 0),
+        2
+    ) AS margin_pct
+FROM public.staging_fmcg
+GROUP BY category
+ORDER BY revenue DESC;
+
+
+-- ============================================================
+-- 4. CITY × CATEGORY PERFORMANCE
+-- Business Question:
+-- Which city-category combinations perform best?
+-- ============================================================
+
+SELECT
+    city,
+    category,
+    COUNT(*) AS transactions,
+    ROUND(SUM(revenue), 2) AS revenue,
+    ROUND(SUM(margin), 2) AS margin,
+    ROUND(
+        SUM(margin) * 100.0 / NULLIF(SUM(revenue), 0),
+        2
+    ) AS margin_pct
+FROM public.staging_fmcg
+GROUP BY
+    city,
+    category
+ORDER BY revenue DESC;
+
+
+-- ============================================================
+-- 5. HIGHEST-REVENUE CITY
+-- Business Question:
+-- Which city is the largest revenue contributor?
+-- ============================================================
+
+SELECT
+    city,
+    ROUND(SUM(revenue), 2) AS revenue
+FROM public.staging_fmcg
+GROUP BY city
+ORDER BY revenue DESC
+LIMIT 1;
+
+
+-- ============================================================
+-- 6. LOWEST-REVENUE CITY
+-- Business Question:
+-- Which city generates the lowest revenue?
+-- ============================================================
+
+SELECT
+    city,
+    ROUND(SUM(revenue), 2) AS revenue
+FROM public.staging_fmcg
+GROUP BY city
+ORDER BY revenue
+LIMIT 1;
+
+
+-- ============================================================
+-- 7. HIGHEST-REVENUE CATEGORY
+-- Business Question:
+-- Which category contributes the most revenue?
+-- ============================================================
+
+SELECT
+    category,
+    ROUND(SUM(revenue), 2) AS revenue
+FROM public.staging_fmcg
+GROUP BY category
+ORDER BY revenue DESC
+LIMIT 1;
+
+
+-- ============================================================
+-- 8. HIGHEST-MARGIN-RATE CATEGORY
+-- Business Question:
+-- Which category has the highest margin percentage?
+-- ============================================================
+
+SELECT
+    category,
+    ROUND(
+        SUM(margin) * 100.0 / NULLIF(SUM(revenue), 0),
+        2
+    ) AS margin_pct
+FROM public.staging_fmcg
+GROUP BY category
+ORDER BY margin_pct DESC
+LIMIT 1;
+
+
+-- ============================================================
+-- 9. HIGHEST-MARGIN-RATE CITY
+-- Business Question:
+-- Which city has the strongest margin percentage?
+-- ============================================================
+
+SELECT
+    city,
+    ROUND(
+        SUM(margin) * 100.0 / NULLIF(SUM(revenue), 0),
+        2
+    ) AS margin_pct
+FROM public.staging_fmcg
+GROUP BY city
+ORDER BY margin_pct DESC
+LIMIT 1;
+
+
+-- ============================================================
+-- 10. CITY-CATEGORY COMBINATIONS ABOVE 20% MARGIN
+-- Business Question:
+-- Which market segments generate margins above 20%?
+-- ============================================================
+
+SELECT
+    city,
+    category,
+    ROUND(SUM(revenue), 2) AS revenue,
+    ROUND(SUM(margin), 2) AS margin,
+    ROUND(
+        SUM(margin) * 100.0 / NULLIF(SUM(revenue), 0),
+        2
+    ) AS margin_pct
+FROM public.staging_fmcg
+GROUP BY
+    city,
+    category
+HAVING
+    SUM(margin) * 100.0 / NULLIF(SUM(revenue), 0) > 20
+ORDER BY margin_pct DESC;
+
+
+-- ============================================================
+-- 11. TOP 10 CITY-CATEGORY COMBINATIONS BY REVENUE
+-- Business Question:
+-- What are the strongest individual market segments?
+-- ============================================================
+
+SELECT
+    city,
+    category,
+    COUNT(*) AS transactions,
+    ROUND(SUM(revenue), 2) AS revenue,
+    ROUND(SUM(margin), 2) AS margin,
+    ROUND(
+        SUM(margin) * 100.0 / NULLIF(SUM(revenue), 0),
+        2
+    ) AS margin_pct
+FROM public.staging_fmcg
+GROUP BY
+    city,
+    category
+ORDER BY revenue DESC
+LIMIT 10;
+
+
+-- ============================================================
+-- 12. TOP 10 CITY-CATEGORY COMBINATIONS BY MARGIN
+-- Business Question:
+-- Which market segments generate the most absolute profit?
+-- ============================================================
+
+SELECT
+    city,
+    category,
+    ROUND(SUM(revenue), 2) AS revenue,
+    ROUND(SUM(margin), 2) AS margin,
+    ROUND(
+        SUM(margin) * 100.0 / NULLIF(SUM(revenue), 0),
+        2
+    ) AS margin_pct
+FROM public.staging_fmcg
+GROUP BY
+    city,
+    category
+ORDER BY margin DESC
+LIMIT 10;

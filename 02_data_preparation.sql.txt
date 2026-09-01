@@ -1,0 +1,14 @@
+-- ============================================================
+-- FMCG SQL ANALYTICS PROJECT
+-- FILE: 02_data_cleaning.sql
+-- PURPOSE: Data cleaning and transformation logic
+-- ============================================================
+
+
+-- NOTE:
+-- staging_fmcg is retained as the raw/imported dataset.
+-- Cleaning and transformations should not overwrite the
+-- original staging data.
+
+
+-- Future cleaning/transformation queries will be added here.
