@@ -53,10 +53,8 @@ Power BI is used to convert the analytical data into interactive dashboards for:
 - Interactive filtering and drill-down exploration
 
 **- Dashboard Preview
-**<img width="1456" height="800" alt="image" src="https://github.com/user-attachments/assets/a521bd24-39c3-4deb-94c5-bd3cf95bad19" />
 <img width="1411" height="799" alt="image" src="https://github.com/user-attachments/assets/baa1ce37-7f6c-451f-aa97-01762dddd483" />
-
-
+**<img width="1456" height="800" alt="image" src="https://github.com/user-attachments/assets/a521bd24-39c3-4deb-94c5-bd3cf95bad19" />
 ---
 
 # Technology Stack
